@@ -15,7 +15,7 @@ jobs:
       - name: Capture demo workspace
         run: |
           cp docs/capture.cjs "$RUNNER_TEMP/capture.cjs"
-          xvfb-run -a node "$RUNNER_TEMP/capture.cjs"
+          xvfb-run -a node "$RUNNER_TEMP/capture.cjs" --test-backup
       - uses: actions/upload-artifact@v4
         with:
           name: collections-preview

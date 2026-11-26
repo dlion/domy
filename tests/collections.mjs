@@ -42,3 +42,20 @@ describe('Given two collections containing the same URL', () => {
     assert.deepEqual(workspace.next, [original.id]);
   });
 });
+
+it('editing a queued link preserves its identity, tags and completion history can be undone', async () => {
+  const {updateLink, undoCompletion} = await import('../extension/model.js');
+  const s = initial(), c = collection('Reading'), x = makeCard('https://example.org','Original');
+  c.cards.push(x,makeCard('https://example.com','Other'));
+  s.collections.push(c);
+  x.tags = ['docs'];
+  addNext(s,[x.id]);
+  assert.throws(()=>updateLink(s,x.id,'Duplicate','https://example.com'));
+  updateLink(s,x.id,'Revised','https://example.org/revised');
+  assert.deepEqual(x.tags,['docs']);
+  assert.deepEqual(s.next,[x.id]);
+  completeNext(s,x.id,12345);
+  undoCompletion(s,s.completed[0].id);
+  assert.deepEqual(s.completed,[]);
+  assert.deepEqual(s.next,[x.id]);
+});

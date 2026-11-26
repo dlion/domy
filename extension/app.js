@@ -1,5 +1,5 @@
 import {access,onUpdate} from './db.js';
-import {collection,makeCard,convertToby,validate,matches,web,tabTags,byUrl,moveCards,addNext,normalizeWorkspace,completeNext} from './model.js';
+import {collection,makeCard,convertToby,validate,matches,web,tabTags,byUrl,moveCards,addNext,normalizeWorkspace,completeNext,undoCompletion,updateLink} from './model.js';
 import {el,btn,select,input,notify,ask} from './ui.js';
 const $=s=>document.querySelector(s);
 const names={home:'Collections',next:'Next',dups:'Duplicates',trash:'Trash'};
@@ -158,6 +158,12 @@ function tagEditor(existing=[],group){
     chips.append(btn(t,()=>{field.value=[...new Set([...read(),t])].join(', ')},'chip'));
   return {fields:[labeled('Tab tags',field),chips],read};
 }
+async function editLink(x){
+  const title=input('Title',x.title), url=input('URL',x.url);
+  title.required=url.required=true;
+  if(await ask('Edit link',labeled('Title',title),labeled('URL',url)))
+    await change(s=>updateLink(s,x.id,title.value.trim(),url.value.trim()));
+}
 async function editTags(x){
   const editor=tagEditor(x.tags,owner(state,x.id));
   if(await ask('Edit tab tags',el('p',x.title),...editor.fields))await change(s=>{
@@ -215,7 +221,7 @@ function row(x,c){
     const queued=queuedUrls.has(x.url);
     const quick=btn(queued?'✓ Next':'+ Next',()=>enqueue([x.id]),'queue-action');
     quick.disabled=queued;quick.setAttribute('aria-label',queued?'Already in Next':'Add to Next');quick.title=queued?'Already in Next':'Add to Next';
-    const menu=actions([['Edit tags',()=>editTags(x)],['Move to…',()=>move(new Set([x.id]))],['Move to Trash',()=>discard(new Set([x.id]))]],'Tab actions');
+    const menu=actions([['Edit link',()=>editLink(x)],['Edit tags',()=>editTags(x)],['Move to…',()=>move(new Set([x.id]))],['Move to Trash',()=>discard(new Set([x.id]))]],'Tab actions');
     menu.className='bookmark-menu';const controls=el('div','','bookmark-controls');controls.append(quick,menu);r.append(controls);
   }
   return r;
@@ -334,13 +340,14 @@ function renderNext(out){
    const line=itemLine(x.title,c.name+' · '+domain(x.url),favicon(x.url,x.icon),
      btn('Open',()=>openCards([x]),'quiet'),
      actions([[-1,'Move up'],[1,'Move down']].map(([step,name])=>[name,()=>change(s=>shift(s.next,s.next.indexOf(id),step))]),'Queue order'),
+     btn('Remove from Next',()=>change(s=>{s.next=s.next.filter(ref=>ref!==id)}),'quiet'),
      btn('✓ Done',async()=>{await change(s=>completeNext(s,id));notify('Moved to Completed.')},'finish'));
    out.append(line);
  }
  if(history.length){out.append(sectionHeading('Completed',history.length));for(const h of history){
    const date=dates.format(h.at);
    out.append(itemLine(h.title,date+' · '+h.source,el('span','✓','complete-icon'),
-     ...(web(h.url)?[btn('Open',()=>openCards([h]),'quiet')]:[])));
+     ...(web(h.url)?[btn('Open',()=>openCards([h]),'quiet'),btn('Undo completion',()=>change(s=>undoCompletion(s,h.id)),'quiet')]:[])));
  }}
 }
 function trashCopyButton(c,x){

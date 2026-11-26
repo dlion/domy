@@ -15,6 +15,10 @@ If you install from a Git clone, select the **extension** directory instead.
 
 If you already use DOMY from another folder, export your backup first. After loading the clone, use **Import & backup → Restore backup** to bring your workspace across.
 
+## Update
+
+For a Git installation, run `git pull --ff-only` in the clone and open a new tab. For a ZIP installation, export a backup and replace the extension files in the same folder. Open a new tab, or click **Reload** on the extension in Brave. When switching folders, export a fresh backup before switching, restore it into the new installation and verify your collections before disabling the old copy.
+
 ## Organize your links
 
 - Choose Grid, Cards, List or Compact and filter by tag or collection color.

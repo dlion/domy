@@ -131,3 +131,27 @@ export function completeNext(s,ref,at=Date.now()){
   }
   return false;
 }
+
+export function undoCompletion(s, historyId) {
+  const event = s.completed.find(h => h.id === historyId);
+  if (!event) return;
+  const cards = s.collections.flatMap(c => c.cards);
+  const card = cards.find(x => x.id === event.ref) || cards.find(x => x.url === event.url);
+  if (!card) throw Error('Restore or save this link before returning it to Next.');
+  addNext(s, [card.id]);
+  s.completed = s.completed.filter(h => h.id !== historyId);
+}
+
+export function updateLink(s, id, title, url) {
+  if (!title || !web(url)) throw Error('Enter a title and an HTTP or HTTPS URL.');
+  for (const group of s.collections) {
+    const card = group.cards.find(x => x.id === id);
+    if (!card) continue;
+    if (group.cards.some(x => x.id !== id && x.url === url)) throw Error('This URL is already in the collection.');
+    if (card.url !== url) card.icon = '';
+    Object.assign(card, {title, url});
+    group.modified = Date.now();
+    return;
+  }
+  throw Error('This link has been removed.');
+}
