@@ -2,12 +2,16 @@
 
 DOMY turns the new tab page in Brave into a personal collection of saved links. Drag an open tab into a collection, save a whole window, or reopen a collection when you return to a project. Your workspace is stored locally in your browser profile.
 
+![DOMY in Grid view with three collections of saved links](docs/collections.png)
+
 ## Install
 
-1. Clone this repository with `git clone https://github.com/dlion/domy.git`.
+1. Download the DOMY ZIP from the [latest release](https://github.com/dlion/domy/releases/latest) and extract it to a folder you plan to keep.
 2. Open `brave://extensions` and enable **Developer mode**.
-3. Click **Load unpacked** and select the **extension** directory inside the clone.
+3. Click **Load unpacked** and select the extracted directory containing **manifest.json**.
 4. Open a new tab. Use **New collection** to create your first collection, then drag a page from **Open tabs** into it.
+
+If you install from a Git clone, select the **extension** directory instead.
 
 If you already use DOMY from another folder, export your backup first. After loading the clone, use **Import & backup → Restore backup** to bring your workspace across.
 
