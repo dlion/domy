@@ -1,0 +1,22 @@
+name: Capture README preview
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser test tools
+        run: |
+          cd "$RUNNER_TEMP"
+          npm install playwright@1.56.1
+          npx playwright install chromium
+      - name: Capture demo workspace
+        run: |
+          cp docs/capture.cjs "$RUNNER_TEMP/capture.cjs"
+          xvfb-run -a node "$RUNNER_TEMP/capture.cjs"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: collections-preview
+          path: docs/collections.png
