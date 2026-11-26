@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMY · Collections</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="bookmarks.css"></head>
+<body><aside><div class="brand"><i class="mark" aria-hidden="true"></i>DOMY</div>
+<button id="find">⌕ &nbsp; Search <kbd>/</kbd></button><nav id="nav"></nav><div class="side-label">Collections</div><div id="shortcuts"></div><div id="tag-nav"></div>
+<footer><details><summary>Import &amp; backup</summary><div><button id="import">Import from Toby</button><button id="backup">Export backup</button><button id="restore">Restore backup</button></div></details></footer></aside>
+<main><header><div><h1 id="heading"></h1><p id="counts"></p></div><button id="create" hidden class="primary">＋ New collection</button></header><section id="tools"></section><section id="content"></section></main>
+<section class="rail"><h2>Open tabs</h2><p>Current window</p><div id="open"></div></section>
+<dialog id="editor"><form method="dialog"><h2></h2><div id="fields"></div><menu><button type="button" id="cancel">Cancel</button><button class="primary" value="ok">Save</button></menu></form></dialog>
+<dialog id="finder"><div class="findbar"><input id="needle" type="search" placeholder="Search collections, titles or URLs" aria-label="Search collections, titles or URLs"><button id="dismiss">Esc</button></div><div class="scope"><button id="search-tabs">Tabs</button><button id="search-collections">Collections</button></div><div id="results"></div></dialog>
+<output role="status"></output><input id="file" type="file" accept=".json,application/json" hidden><script type="module" src="local-updates.js"></script><script type="module" src="app.js"></script></body></html>
